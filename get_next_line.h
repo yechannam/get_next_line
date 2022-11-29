@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:19:09 by yecnam            #+#    #+#             */
-/*   Updated: 2022/11/29 13:57:32 by yecnam           ###   ########.fr       */
+/*   Updated: 2022/11/29 16:13:10 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,6 +29,6 @@ int		ft_strlen(char *s);
 char	*ft_strjoin(char *s1, char *s2);
 t_list	*make_lst(int fd);
 t_list	*lst_addback(t_list *head, t_list *now);
-char	*make_return(t_list *lst);
+char	*make_return(t_list **lst);
 
 #endif

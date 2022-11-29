@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:19:03 by yecnam            #+#    #+#             */
-/*   Updated: 2022/11/29 16:01:39 by yecnam           ###   ########.fr       */
+/*   Updated: 2022/11/29 16:25:16 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,34 +55,28 @@ char	*make_arr(char *s, int fd)
 	return (s);
 }
 
-char	*make_return(t_list *lst)
+char	*make_return(t_list **lst)
 {
-	int	i;
-	int save;
-	char *s;
-	char *back;
+	int		i;
+	int		j;
+	int		save;
+	char	*s;
+	char	*back;
 
 	i = 0;
-	while (lst->content[i] != '\n')
+	while ((*lst)->content[i] != '\n')
 		i++;
-	printf("\n%d\n",i);
 	s = (char *)malloc(sizeof(char) * (i + 1));
 	save = ++i;
-	while (i >= 0)
-	{
-		s[i] = lst->content[i];
-		i--;
-	}
-	i = ft_strlen(lst->content);
-	printf("\n%d\n",i);
-	back = (char *)malloc(sizeof(char) * (i - save));
-	while (save < i)
-	{
-		*back = lst->content[++save];
-		back++;
-	}
-	back[save] = 0;
-	lst->content = back;
+	while (--i >= 0)
+		s[i] = (*lst)->content[i];
+	s[save] = 0;
+	i = ft_strlen((*lst)->content);
+	back = (char *)malloc(sizeof(char) * (i - save + 1));
+	j = 0;
+	while (save < i + 1)
+		back[j++] = (*lst)->content[save++];
+	(*lst)->content = back;
 	return (s);
 }
 
@@ -108,10 +102,7 @@ char	*get_next_line(int fd)
 	}
 	if (!check_nextline(next->content))
 		next->content = make_arr(next->content, fd);
-	printf("%s\n", next->content);
-	s = make_return(next);
-	printf("%s \n\n",s);
-	printf("%s\n", next->content);
+	s = make_return(&next);
 	return (s);
 }
 
@@ -122,9 +113,9 @@ int main()
 	//int	fd2;
 
 	fd = open("text", O_RDONLY);
-	get_next_line(fd);
+	printf("%s\n", get_next_line(fd));
 	//fd2 = open("text2", O_RDONLY);
-	//get_next_line(fd2);
-	//get_next_line(fd);
+	//printf("%s\n", get_next_line(fd2));
+	printf("%s\n", get_next_line(fd));
 	//get_next_line(fd2);
 }
