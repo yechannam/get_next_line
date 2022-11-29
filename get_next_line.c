@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:19:03 by yecnam            #+#    #+#             */
-/*   Updated: 2022/11/29 15:47:59 by yecnam           ###   ########.fr       */
+/*   Updated: 2022/11/29 16:01:39 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ char	*make_arr(char *s, int fd)
 		buf[temp] = 0;
 		s = ft_strjoin(s, buf);
 	}
-	free(buf);
 	return (s);
 }
 
@@ -66,6 +65,7 @@ char	*make_return(t_list *lst)
 	i = 0;
 	while (lst->content[i] != '\n')
 		i++;
+	printf("\n%d\n",i);
 	s = (char *)malloc(sizeof(char) * (i + 1));
 	save = ++i;
 	while (i >= 0)
@@ -74,15 +74,15 @@ char	*make_return(t_list *lst)
 		i--;
 	}
 	i = ft_strlen(lst->content);
-	back = (char *)malloc(sizeof(char) * (i - save + 1));
-	while (save < i - 1)
+	printf("\n%d\n",i);
+	back = (char *)malloc(sizeof(char) * (i - save));
+	while (save < i)
 	{
-		*back = lst->content[save++];
+		*back = lst->content[++save];
 		back++;
 	}
 	back[save] = 0;
 	lst->content = back;
-	free(back);
 	return (s);
 }
 
@@ -108,8 +108,10 @@ char	*get_next_line(int fd)
 	}
 	if (!check_nextline(next->content))
 		next->content = make_arr(next->content, fd);
+	printf("%s\n", next->content);
 	s = make_return(next);
-	printf("%s\n",s);
+	printf("%s \n\n",s);
+	printf("%s\n", next->content);
 	return (s);
 }
 
