@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:19:09 by yecnam            #+#    #+#             */
-/*   Updated: 2022/11/29 16:13:10 by yecnam           ###   ########.fr       */
+/*   Updated: 2022/11/30 13:48:31 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ typedef struct s_list
 }	t_list;
 
 char	*get_next_line(int fd);
-char	*make_arr(char *s, int fd);
+int		make_arr(char **s, int fd);
 int		check_nextline(char *s);
 int		ft_strlen(char *s);
 char	*ft_strjoin(char *s1, char *s2);

@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:19:03 by yecnam            #+#    #+#             */
-/*   Updated: 2022/11/29 16:25:16 by yecnam           ###   ########.fr       */
+/*   Updated: 2022/11/30 18:00:16 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,31 +30,37 @@ int	check_nextline(char *s)
 	return (0);
 }
 
-char	*make_arr(char *s, int fd)
+int	make_arr(char **s, int fd)
 {
 	int		temp;
 	char	*buf;
+	char	*tmp;
 
 	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (0);
-	while (!check_nextline(s))
+	while (!check_nextline(*s))
 	{
 		temp = read(fd, buf, BUFFER_SIZE);
-		printf("\ntemp : %d\n",temp);
-		printf("\n s : %s\n",s);
-		if (temp == 0)
-			return (s);
-		if (temp == -1)
+		if (temp == 0 || temp == -1)
+		{
+			free(buf);
+			if (temp == 0)
+				return (1);
+			return (0);
+		}
+		buf[temp] = 0;
+		tmp = *s;
+		*s = ft_strjoin(tmp, buf);
+		free(tmp);
+		if (!*s)
 		{
 			free(buf);
 			return (0);
 		}
-		buf[temp] = 0;
-		s = ft_strjoin(s, buf);
 	}
 	free(buf);
-	return (s);
+	return (1);
 }
 
 char	*make_return(t_list **lst)
@@ -66,13 +72,17 @@ char	*make_return(t_list **lst)
 	char	*back;
 
 	i = 0;
-	while ((*lst)->content[i] != '\n' && (*lst)->content)
+	if (!(*lst)->content || (*lst)->content[0] == 0)
+		return (0);
+	while ((*lst)->content[i] != '\n' && (*lst)->content[i])
 		i++;
 	s = (char *)malloc(sizeof(char) * (i + 1));
+	if (!s)
+		return (0);
 	save = ++i;
 	while (--i >= 0)
 		s[i] = (*lst)->content[i];
-	s[save] = 0;
+	s[save - 1] = 0;
 	i = ft_strlen((*lst)->content);
 	back = (char *)malloc(sizeof(char) * (i - save + 1));
 	j = 0;
@@ -105,7 +115,7 @@ char	*get_next_line(int fd)
 	t_list			*next;
 	char			*s;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE <= 0 || read(fd, NULL, 0) == -1)
 		return (0);
 	if (!head)
 		if (!make_lst(fd, &head))
@@ -115,29 +125,40 @@ char	*get_next_line(int fd)
 	if (!next)
 		return (0);
 	if (!check_nextline(next->content))
-	{
-		next->content = make_arr(next->content, fd);
-		if (!(next->content))
+		if (!make_arr(&next->content, fd))
 			return (0);
-	}
 	s = make_return(&next);
+	while (head && !s)
+	{
+		next = head;
+		free(next->content);
+		free(next);
+		head = head->next;
+	}
 	return (s);
 }
 
-#include <fcntl.h>
-int main()
-{
-	int	fd;
-	// int	fd2;
-	int	i;
+//#include <fcntl.h>
+//int main()
+//{
+//	int	fd;
+//	// int	fd2;
+//	int	i;
+//	char *str;
 
-	i = 0;
-	fd = open("text", O_RDONLY);
-	// fd2 = open("text2", O_RDONLY);
-	while (i<9)
-	{
-		printf("fd  %d: %s\n", i, get_next_line(fd));
-		// printf("fd2 %d: %s\n", i, get_next_line(fd2));
-		i++;
-	}
-}
+//	i = 0;
+//	fd = open("text", O_RDONLY);
+//	// fd2 = open("text2", O_RDONLY);
+	
+//	while (fd)
+//	{
+//		str = get_next_line(fd);
+//		printf("str: %s\n", str);
+//		if (!str)
+//			return (0);
+//		// printf("fd  %d: %s\n", i, get_next_line(fd));
+//		// printf("fd2 %d: %s\n", i, get_next_line(fd2));
+//		i++;
+//	}
+
+//}

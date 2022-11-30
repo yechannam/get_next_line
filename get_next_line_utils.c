@@ -6,7 +6,7 @@
 /*   By: yecnam <yecnam@student.42seoul.kr>         +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/11/28 13:19:06 by yecnam            #+#    #+#             */
-/*   Updated: 2022/11/29 15:27:53 by yecnam           ###   ########.fr       */
+/*   Updated: 2022/11/30 13:13:30 by yecnam           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ char	*ft_strjoin(char *s1, char *s2)
 	int		i;
 
 	i = 0;
+	if (!s2)
+		return (0);
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
 	str = (char *)malloc(sizeof(char) * (len1 + len2 + 1));
