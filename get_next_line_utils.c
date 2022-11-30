@@ -51,23 +51,22 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (str);
 }
 
-t_list	*make_lst(int fd)
+int	make_lst(int fd, t_list **lst)
 {
-	t_list	*lst;
-
-	lst = (t_list *)malloc(sizeof(t_list));
-	lst->fd = fd;
-	return (lst);
+	*lst = (t_list *)malloc(sizeof(t_list));
+	if (!(*lst))
+		return (0);
+	(*lst)->fd = fd;
+	return (1);
 }
 
 t_list	*lst_addback(t_list *head, t_list *now)
 {
-	t_list *lst;
+	t_list	*lst;
 
 	lst = head;
 	while (lst->next)
 		lst = lst->next;
 	lst->next = now;
-
 	return (head);
 }

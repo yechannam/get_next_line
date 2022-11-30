@@ -2,5 +2,6 @@
 	"files.associations": {
 		"stdio.h": "c",
 		"fcntl.h": "c"
-	}
+	},
+	"editor.fontSize": 13
 }

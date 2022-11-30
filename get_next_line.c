@@ -14,10 +14,6 @@
 #include <stdio.h>
 #include "get_next_line.h"
 
-#ifndef BUFFER_SIZE
-# define BUFFER_SIZE 1024
-#endif
-
 int	check_nextline(char *s)
 {
 	int	i;
@@ -28,10 +24,10 @@ int	check_nextline(char *s)
 	while (s[i])
 	{
 		if (s[i] == '\n')
-			return (0);
+			return (1);
 		i++;
 	}
-	return (1);
+	return (0);
 }
 
 char	*make_arr(char *s, int fd)
@@ -39,19 +35,25 @@ char	*make_arr(char *s, int fd)
 	int		temp;
 	char	*buf;
 
-	buf = (char *)malloc((sizeof(char) * BUFFER_SIZE) + 1);
+	buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (0);
-	while (check_nextline(buf))
+	while (!check_nextline(s))
 	{
 		temp = read(fd, buf, BUFFER_SIZE);
-		if (temp == -1)
-			return (0);
+		printf("\ntemp : %d\n",temp);
+		printf("\n s : %s\n",s);
 		if (temp == 0)
 			return (s);
+		if (temp == -1)
+		{
+			free(buf);
+			return (0);
+		}
 		buf[temp] = 0;
 		s = ft_strjoin(s, buf);
 	}
+	free(buf);
 	return (s);
 }
 
@@ -64,7 +66,7 @@ char	*make_return(t_list **lst)
 	char	*back;
 
 	i = 0;
-	while ((*lst)->content[i] != '\n')
+	while ((*lst)->content[i] != '\n' && (*lst)->content)
 		i++;
 	s = (char *)malloc(sizeof(char) * (i + 1));
 	save = ++i;
@@ -80,15 +82,8 @@ char	*make_return(t_list **lst)
 	return (s);
 }
 
-char	*get_next_line(int fd)
+t_list	*get_next(t_list *head, t_list *next, int fd)
 {
-	static t_list	*head;
-	t_list			*next;
-	char			*s;
-
-	if (!head)
-		head = make_lst(fd);
-	next = head;
 	while (next)
 	{
 		if (next->fd == fd)
@@ -97,11 +92,34 @@ char	*get_next_line(int fd)
 	}
 	if (!next)
 	{
-		next = make_lst(fd);
+		if (!make_lst(fd, &next))
+			return (0);
 		head = lst_addback(head, next);
 	}
+	return (next);
+}
+
+char	*get_next_line(int fd)
+{
+	static t_list	*head;
+	t_list			*next;
+	char			*s;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (0);
+	if (!head)
+		if (!make_lst(fd, &head))
+			return (0);
+	next = head;
+	next = get_next(head, next, fd);
+	if (!next)
+		return (0);
 	if (!check_nextline(next->content))
+	{
 		next->content = make_arr(next->content, fd);
+		if (!(next->content))
+			return (0);
+	}
 	s = make_return(&next);
 	return (s);
 }
@@ -110,12 +128,16 @@ char	*get_next_line(int fd)
 int main()
 {
 	int	fd;
-	//int	fd2;
+	// int	fd2;
+	int	i;
 
+	i = 0;
 	fd = open("text", O_RDONLY);
-	printf("%s\n", get_next_line(fd));
-	//fd2 = open("text2", O_RDONLY);
-	//printf("%s\n", get_next_line(fd2));
-	printf("%s\n", get_next_line(fd));
-	//get_next_line(fd2);
+	// fd2 = open("text2", O_RDONLY);
+	while (i<9)
+	{
+		printf("fd  %d: %s\n", i, get_next_line(fd));
+		// printf("fd2 %d: %s\n", i, get_next_line(fd2));
+		i++;
+	}
 }
