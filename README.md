@@ -1,4 +1,4 @@
-![header](https://capsule-render.vercel.app/api?type=waving&color=auto&height=240&section=header&text=GET_NEXT_LINE&fontSize=80&animation=scaleIn&fontColor=#ffffff)
+![header](https://capsule-render.vercel.app/api?type=waving&color=auto&height=240&section=header&text=GET_NEXT_LINE&fontSize=80&animation=scaleIn&fontColor=ffffff)
 
 ## LEARND
 - open, read 함수
